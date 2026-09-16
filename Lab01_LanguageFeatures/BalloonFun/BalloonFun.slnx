@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="BalloonFun.Console.Tests/BalloonFun.Console.Tests.csproj" />
+  <Project Path="BalloonFun.Console/BalloonFun.Console.csproj" />
+</Solution>

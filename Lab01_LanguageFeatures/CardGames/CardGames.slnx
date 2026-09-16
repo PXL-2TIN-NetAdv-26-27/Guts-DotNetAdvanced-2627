@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="CardGames.Desktop/CardGames.Desktop.csproj" />
+  <Project Path="CardGames.Domain.Tests/CardGames.Domain.Tests.csproj" />
+  <Project Path="CardGames.Domain/CardGames.Domain.csproj" />
+</Solution>
