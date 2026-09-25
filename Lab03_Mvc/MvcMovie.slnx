@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="MvcMovie.Web/MvcMovie.Web.csproj" />
+  <Project Path="Guts.Tests/Guts.Tests.csproj" />
+</Solution>
