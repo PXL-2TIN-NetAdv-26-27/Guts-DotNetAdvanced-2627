@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Guts.Tests/Guts.Tests.csproj" />
+  <Project Path="RomanNumberConverterApp.Ui.Tests/RomanNumberConverterApp.Ui.Tests.csproj" />
+  <Project Path="RomanNumberConverterApp.Ui/RomanNumberConverterApp.Ui.csproj" />
+</Solution>
