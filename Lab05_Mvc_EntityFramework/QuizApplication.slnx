@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="QuizApplication.AppLogic/QuizApplication.AppLogic.csproj" />
+  <Project Path="QuizApplication.Domain/QuizApplication.Domain.csproj" />
+  <Project Path="QuizApplication.Infrastructure/QuizApplication.Infrastructure.csproj" />
+  <Project Path="QuizApplication.Tests/QuizApplication.Tests.csproj" />
+  <Project Path="QuizApplication.Web/QuizApplication.Web.csproj" />
+</Solution>
