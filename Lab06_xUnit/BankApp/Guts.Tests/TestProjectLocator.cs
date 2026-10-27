@@ -85,7 +85,7 @@ internal static class TestProjectLocator
         string trxFilePath = Path.Combine(resultsDirectory, "results.trx");
 
         var (_, output) = RunDotnet(
-            $"test \"{projectFile}\" --configuration Debug -- --report-xunit-trx --report-xunit-trx-filename \"{trxFilePath}\"");
+            $"test \"{projectFile}\" --configuration Debug --results-directory \"{resultsDirectory}\" --report-xunit-trx --report-xunit-trx-filename \"results.trx\"");
 
         string? trxPath = File.Exists(trxFilePath)
             ? trxFilePath
