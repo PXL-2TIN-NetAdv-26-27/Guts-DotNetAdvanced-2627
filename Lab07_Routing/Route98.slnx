@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Guts.Tests/Guts.Tests.csproj" />
+  <Project Path="Route98.Web/Route98.Web.csproj" />
+</Solution>
