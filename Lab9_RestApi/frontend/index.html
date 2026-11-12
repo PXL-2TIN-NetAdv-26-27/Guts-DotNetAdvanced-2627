@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pie Shop Orders</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Pie Shop Orders</h1>
+            <p class="subtitle">View all customer orders</p>
+            <button id="refreshButton" class="refresh-button">Refresh</button>
+        </header>
+        
+        <div id="loading" class="loading">Loading orders...</div>
+        <div id="error" class="error" style="display: none;"></div>
+        
+        <div id="orders-container" class="orders-container"></div>
+        <div id="bottom-loading" class="bottom-loading" style="display: none;">
+            <div class="spinner"></div>
+            <span>Refreshing orders...</span>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
+

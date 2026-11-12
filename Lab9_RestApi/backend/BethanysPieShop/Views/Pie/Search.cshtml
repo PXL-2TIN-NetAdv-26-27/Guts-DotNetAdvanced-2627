@@ -1,0 +1,47 @@
+﻿<br />
+<br />
+  Enter your search query:
+<input id="txtPieName" type="text" />
+<button id="searchButton">Search</button>
+<br />
+<br />
+<table id="tblPies" class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width: 120px;"></th>
+            <th>Name</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script type="text/javascript">
+    document.getElementById("searchButton").addEventListener("click", function () {
+        var searchQuery = document.getElementById("txtPieName").value.trim();
+        fetch("/api/PiesApi/search",{
+            method: "POST",
+            body: JSON.stringify(searchQuery),
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error(`Error with status ${response.status}`);
+            }
+        }).then(pies => {
+            var table = document.getElementById("tblPies");
+            table.querySelectorAll("tbody tr").forEach(e => e.remove());
+            pies.forEach(pie => {
+                var row = document.querySelector("tbody").insertRow();
+                row.insertCell().innerHTML = '<img class="card-img-top" src=' + pie.imageThumbnailUrl + '>';
+                row.insertCell().innerHTML = '<a class="pie-link" href="/pie/details/' + pie.pieId + '">' + pie.name + '</a>';
+                row.insertCell().innerHTML = pie.price;
+            });
+        })
+        .catch(error => console.log(error));
+    });
+</script>

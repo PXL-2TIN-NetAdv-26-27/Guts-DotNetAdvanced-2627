@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="BethanysPieShop.Tests/BethanysPieShop.Tests.csproj" />
+  <Project Path="BethanysPieShop/BethanysPieShop.csproj" />
+</Solution>
