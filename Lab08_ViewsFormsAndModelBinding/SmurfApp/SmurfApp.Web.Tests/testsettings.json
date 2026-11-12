@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+    "TestDatabase": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=SmurfDb_Test;Integrated Security=True"
+  }
+}

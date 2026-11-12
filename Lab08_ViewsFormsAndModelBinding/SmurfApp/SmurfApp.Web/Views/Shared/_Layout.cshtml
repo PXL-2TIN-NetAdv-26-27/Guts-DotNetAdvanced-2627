@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Smurfs App</title>
+    <link rel="stylesheet" href="~/css/bootstrap-sketchy.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        @* TODO: Render the top navigation bar here. Use the _TopNavBar partial view *@
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container mt-1 mb-1">
+            SmurfApp exercise - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

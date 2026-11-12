@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="SmurfApp.AppLogic/SmurfApp.AppLogic.csproj" />
+  <Project Path="SmurfApp.Domain/SmurfApp.Domain.csproj" />
+  <Project Path="SmurfApp.Infrastructure/SmurfApp.Infrastructure.csproj" />
+  <Project Path="SmurfApp.Web.Tests/SmurfApp.Web.Tests.csproj" Id="ddfc3d32-f100-46a2-9784-81f467ab7890" />
+  <Project Path="SmurfApp.Web/SmurfApp.Web.csproj" />
+</Solution>
