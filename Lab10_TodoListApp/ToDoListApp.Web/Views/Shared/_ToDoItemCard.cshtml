@@ -1,0 +1,10 @@
+﻿@model ToDoListApp.Domain.ToDoItem
+<div class="card my-1">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Description</h5>
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsDone" />
+            <label class="form-check-label" asp-for="IsDone"></label>
+        </div>
+    </div>
+</div>

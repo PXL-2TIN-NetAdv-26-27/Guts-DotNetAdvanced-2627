@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="Guts.Tests/Guts.Tests.csproj" />
+  <Project Path="ToDoListApp.AppLogic/ToDoListApp.AppLogic.csproj" />
+  <Project Path="ToDoListApp.Domain.Tests/ToDoListApp.Domain.Tests.csproj" />
+  <Project Path="ToDoListApp.Domain/ToDoListApp.Domain.csproj" />
+  <Project Path="ToDoListApp.Infrastructure/ToDoListApp.Infrastructure.csproj" />
+  <Project Path="ToDoListApp.Web/ToDoListApp.Web.csproj" />
+</Solution>

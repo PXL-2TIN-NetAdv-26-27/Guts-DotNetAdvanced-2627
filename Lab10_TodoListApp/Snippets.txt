@@ -1,0 +1,101 @@
+#############
+#Search html#
+#############
+
+<div class="container">
+    <h1 class="display-4 text-center mb-3">Search</h1>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-8">
+                                <input class="form-control">
+                            </div>
+                            <div class="col-sm-2">
+                                <button class="btn btn-primary mb-2">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="card border-warning mb-3">
+        <div class="card-header">No TODO lists found</div>
+        <div class="card-body">
+            <p class="card-text">Fill in a search term (or nothing) and click on the button to show the matching TODO lists</p>
+        </div>
+    </div>
+   
+    <div class="row mb-3">
+        <div class="col-12">
+            <h4>Results</h4>
+            <div class="card my-1">
+                <div class="card-body">
+                    <h5 class="card-title">Title</h5>
+                    <a class="btn btn-outline-primary">Show details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+############
+#Badge html#
+############
+<span class="badge bg-warning text-dark"># TODOs</span>
+
+
+#############
+#Detail html#
+#############
+<div class="container">
+    <h1 class="display-4 text-center mb-3">List title - Detail</h1>
+
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="card my-1">
+                <div class="card-body">
+                    <h5 class="card-title">Item description</h5>
+                    <div class="form-check">
+                        <input class="form-check-input" />
+                        <label class="form-check-label"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        <div class="row mb-3">
+                            <label class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input class="form-control">
+                            </div>
+                            <div class="col-sm-3">
+                                <button class="btn btn-primary mb-2">Add item</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-3">
+        <div class="col-12">
+            <a class="btn btn-outline-secondary">Back to search</a>
+        </div>
+    </div>
+
+</div>
