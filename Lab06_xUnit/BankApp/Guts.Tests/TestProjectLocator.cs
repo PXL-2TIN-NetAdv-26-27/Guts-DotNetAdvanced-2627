@@ -12,8 +12,10 @@ internal static class TestProjectLocator
     private const string TestProjectName = "Bank.UI.Tests";
     private const string SolutionFileName = "Bank.slnx";
 
+    private static readonly object CommandLock = new object();
     private static readonly Lazy<string> SolutionDirectoryLazy = new(FindSolutionDirectory);
-    private static readonly Lazy<Assembly> TestAssemblyLazy = new(BuildAndLoadTestAssembly);
+    private static readonly Lazy<bool> BuildLazy = new(BuildTestProjectOnce);
+    private static readonly Lazy<Assembly> TestAssemblyLazy = new(LoadTestAssembly);
     private static readonly Lazy<string> TrxResultsPathLazy = new(RunTestsAndGetTrxPath);
     private static readonly Lazy<string> CoberturaPathLazy = new(CollectCoverageAndGetCoberturaPath);
 
@@ -48,18 +50,28 @@ internal static class TestProjectLocator
         return directory.FullName;
     }
 
-    private static Assembly BuildAndLoadTestAssembly()
+    private static bool BuildTestProjectOnce()
     {
-        string projectFile = TestProjectFile
-            ?? throw new InvalidOperationException(
+        if (!TestProjectExists)
+        {
+            throw new InvalidOperationException(
                 $"The '{TestProjectName}' project was not found in '{SolutionDirectory}'. " +
                 $"Add a '{TestProjectName}' class library project to the solution first.");
+        }
 
-        var (exitCode, output) = RunDotnet($"build \"{projectFile}\" --configuration Debug");
+        string relativeProjectFile = Path.Combine(TestProjectName, $"{TestProjectName}.csproj");
+        var (exitCode, output) = RunDotnet($"build \"{relativeProjectFile}\" --configuration Debug");
         if (exitCode != 0)
         {
             throw new InvalidOperationException($"Building '{TestProjectName}' failed:{Environment.NewLine}{output}");
         }
+
+        return true;
+    }
+
+    private static Assembly LoadTestAssembly()
+    {
+        _ = BuildLazy.Value;
 
         string? assemblyPath = Directory
             .EnumerateFiles(TestProjectDirectory, $"{TestProjectName}.dll", SearchOption.AllDirectories)
@@ -77,15 +89,15 @@ internal static class TestProjectLocator
 
     private static string RunTestsAndGetTrxPath()
     {
-        string projectFile = TestProjectFile
-            ?? throw new InvalidOperationException($"The '{TestProjectName}' project was not found in '{SolutionDirectory}'.");
+        _ = BuildLazy.Value;
 
+        string relativeProjectFile = Path.Combine(TestProjectName, $"{TestProjectName}.csproj");
         string resultsDirectory = Path.Combine(Path.GetTempPath(), "GutsTests", Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(resultsDirectory);
         string trxFilePath = Path.Combine(resultsDirectory, "results.trx");
 
         var (_, output) = RunDotnet(
-            $"test \"{projectFile}\" --configuration Debug --results-directory \"{resultsDirectory}\" --report-xunit-trx --report-xunit-trx-filename \"results.trx\"");
+            $"test \"{relativeProjectFile}\" --configuration Debug --no-build --results-directory \"{resultsDirectory}\" --report-xunit-trx --report-xunit-trx-filename \"results.trx\"");
 
         string? trxPath = File.Exists(trxFilePath)
             ? trxFilePath
@@ -112,17 +124,18 @@ internal static class TestProjectLocator
 
     private static string CollectCoverageAndGetCoberturaPath()
     {
-        string projectFile = TestProjectFile
-            ?? throw new InvalidOperationException($"The '{TestProjectName}' project was not found in '{SolutionDirectory}'.");
+        _ = BuildLazy.Value;
 
-        RunDotnet("tool restore");
+        EnsureCoverageToolAvailable();
 
+        // Use a path relative to SolutionDirectory (which has no spaces) so nested quoting in 'dotnet-coverage collect' never breaks on user folders with spaces.
+        string relativeProjectFile = Path.Combine(TestProjectName, $"{TestProjectName}.csproj");
         string resultsDirectory = Path.Combine(Path.GetTempPath(), "GutsTests", Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(resultsDirectory);
         string coberturaPath = Path.Combine(resultsDirectory, "coverage.cobertura.xml");
 
         var (exitCode, output) = RunDotnet(
-            $"tool run dotnet-coverage collect \"dotnet test \\\"{projectFile}\\\" --configuration Debug\" " +
+            $"tool run dotnet-coverage collect \"dotnet test {relativeProjectFile} --configuration Debug --no-build\" " +
             $"--output \"{coberturaPath}\" --output-format cobertura");
 
         if (exitCode != 0 || !File.Exists(coberturaPath))
@@ -133,21 +146,42 @@ internal static class TestProjectLocator
         return coberturaPath;
     }
 
+    private static void EnsureCoverageToolAvailable()
+    {
+        var (probeExitCode, _) = RunDotnet("tool run dotnet-coverage --version");
+        if (probeExitCode == 0)
+        {
+            return;
+        }
+
+        var (restoreExitCode, restoreOutput) = RunDotnet("tool restore");
+        if (restoreExitCode != 0)
+        {
+            throw new InvalidOperationException(
+                $"Restoring the local 'dotnet-coverage' tool failed. Check '.config/dotnet-tools.json' and NuGet access:{Environment.NewLine}{restoreOutput}");
+        }
+    }
+
     private static (int ExitCode, string Output) RunDotnet(string arguments)
     {
-        var startInfo = new ProcessStartInfo("dotnet", arguments)
+        // Serialize dotnet CLI invocations because xUnit runs test classes in parallel against the same project outputs.
+        lock (CommandLock)
         {
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            WorkingDirectory = SolutionDirectory
-        };
+            var startInfo = new ProcessStartInfo("dotnet", arguments)
+            {
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                WorkingDirectory = SolutionDirectory
+            };
 
-        using var process = Process.Start(startInfo) ?? throw new InvalidOperationException($"Could not start 'dotnet {arguments}'.");
-        string output = process.StandardOutput.ReadToEnd();
-        string error = process.StandardError.ReadToEnd();
-        process.WaitForExit();
+            using var process = Process.Start(startInfo) ?? throw new InvalidOperationException($"Could not start 'dotnet {arguments}'.");
+            Task<string> errorTask = process.StandardError.ReadToEndAsync();
+            string output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+            string error = errorTask.GetAwaiter().GetResult();
 
-        return (process.ExitCode, output + error);
+            return (process.ExitCode, output + error);
+        }
     }
 }
